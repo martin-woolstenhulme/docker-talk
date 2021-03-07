@@ -1,6 +1,7 @@
 const http = require("http");
 const host = '0.0.0.0';
 const port = 8000;
+const fs = require('fs').promises;
 
 const mysql = require('mysql');
 
@@ -44,8 +45,12 @@ const requestListener = function (req, res) {
             res.end(authors);
             break
         default:
-            res.writeHead(404);
-            res.end('Not Found');
+            fs.readFile(__dirname + "/404.png")
+            .then(contents => {
+                res.setHeader("Content-Type", "image/png");
+                res.writeHead(404);
+                res.end(contents);
+            })
     }
 };
 
