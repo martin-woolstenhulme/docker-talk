@@ -1,17 +1,36 @@
 const http = require("http");
-
 const host = '0.0.0.0';
 const port = 8000;
 
-const books = JSON.stringify([
-    { title: "The Alchemist", author: "Paulo Coelho", year: 1988 },
-    { title: "The Prophet", author: "Kahlil Gibran", year: 1923 }
-]);
+const mysql = require('mysql');
 
-const authors = JSON.stringify([
-    { name: "Paulo Coelho", countryOfBirth: "Brazil", yearOfBirth: 1947 },
-    { name: "Kahlil Gibran", countryOfBirth: "Lebanon", yearOfBirth: 1883 }
-]);
+const connection = mysql.createConnection({
+    host: 'db',
+    user: 'root',
+    password: 'changeme',
+    database: 'library'
+});
+
+let books;
+let authors;
+
+connection.connect(function(err) {
+    if (err) {
+      return console.error('error: ' + err.message);
+    }
+  
+    console.log('Connected to the MySQL server.');
+  });
+
+connection.query('SELECT * FROM books', function(error, results){
+    console.log(results);
+    books = JSON.stringify(results);
+});
+
+connection.query('SELECT * FROM authors', function(error, results){
+    console.log(results);
+    authors = JSON.stringify(results);
+});
 
 const requestListener = function (req, res) {
     res.setHeader("Content-Type", "application/json");
