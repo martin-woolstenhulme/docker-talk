@@ -1,0 +1,11 @@
+version: '2.2'
+services:
+  server:
+    image: server
+    ports:
+      - 8001:8000
+
+  api:
+    image: api
+    ports:
+      - 8000:8000
